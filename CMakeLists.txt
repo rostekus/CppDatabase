@@ -1,11 +1,13 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.12)
 
-project(Database 
-            VERSION 1.0
-            DESCRIPTION "Simple Database implementation in C++")
+project(Database VERSION 0.0.0 LANGUAGES CXX)
 
-add_subdirectory(src/cli)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_subdirectory(src/db)
-
-add_subdirectory(tests)
+add_executable(Database src/main.cpp
+        src/Database/IDatabase.cpp
+        src/Database/IDatabase.hpp
+        src/Database/ExtDatabase.cpp
+        src/Database/ExtDatabase.hpp
+        )
