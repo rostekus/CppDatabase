@@ -13,8 +13,7 @@ FetchContent_MakeAvailable(googletest)
 
 # Now simply link against gtest or gtest_main as needed. Eg
 add_executable(example
-	example.cpp
-	second.cpp)
+	db-tests.cpp)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/../src)
 target_link_libraries(example PUBLIC db
 	gtest_main)
