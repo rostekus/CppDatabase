@@ -17,7 +17,10 @@ add_library(db Database/IDatabase.cpp
         Network/HTTPServer.hpp
         Network/HTTPServer.cpp
         Log/Logger.cpp
-        Log/Logger.hpp)
+        Log/Logger.hpp
+		Types/Request.cpp
+		Types/Request.hpp
+		)
 
 add_executable(Database main.cpp)
 target_link_libraries(Database PUBLIC db)
