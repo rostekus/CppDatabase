@@ -3,8 +3,11 @@
 //
 
 #include "ExtDatabase.hpp"
+
+#include <filesystem>
 #include <fstream>
-#include "iostream"
+#include <iostream>
+#include <iterator>
 using namespace extdb;
 namespace fs = std::filesystem;
 
@@ -16,6 +19,7 @@ class ExtDatabase::Imp : public db::IDatabase {
   ~Imp() = default;
   std::filesystem::path getFullpath() const override;
 
+  void destroy();
   void setKeyValue(const std::string &key, const std::string &value) override;
   std::string getValueKey(const std::string &key) override;
 
@@ -23,8 +27,12 @@ class ExtDatabase::Imp : public db::IDatabase {
   const std::string mDbName;
   const std::string mFullpath;
 };
-
-ExtDatabase::Imp::Imp(const std::string &dbname) : mDbName(dbname), mFullpath(".groundupdb/" + dbname){
+void ExtDatabase::Imp::destroy() {
+  std::cout << "deleted" << std::endl;
+  fs::remove_all(".groundupdb");
+}
+ExtDatabase::Imp::Imp(const std::string &dbname)
+    : mDbName(dbname), mFullpath(".groundupdb/" + dbname) {
   std::string basedir(".groundupdb");
   if (!fs::exists(basedir)) {
     fs::create_directory(basedir);
@@ -50,11 +58,11 @@ std::string ExtDatabase::Imp::getValueKey(const std::string &key) {
 void ExtDatabase::Imp::setKeyValue(const std::string &key,
                                    const std::string &value) {
   std::ofstream os;
-  os.open(mFullpath + "/" + key + "_string.kv", std::ios::out | std::ios::trunc);
+  os.open(mFullpath + "/" + key + "_string.kv",
+          std::ios::out | std::ios::trunc);
   os << value;
   os.close();
 }
-
 
 std::filesystem::path ExtDatabase::Imp::getFullpath() const {
   return std::filesystem::path(mFullpath);
@@ -63,7 +71,6 @@ std::filesystem::path ExtDatabase::Imp::getFullpath() const {
 ExtDatabase::Imp::Imp(const std::string &dbname,
                       const std::filesystem::path &fullpath)
     : mDbName(dbname), mFullpath(fullpath) {
-
   std::string basedir(".groundupdb");
   if (!fs::exists(basedir)) {
     fs::create_directory(basedir);
@@ -91,3 +98,5 @@ ExtDatabase::ExtDatabase(std::string dbname)
     : mImp(std::unique_ptr<Imp>(std::make_unique<Imp>(dbname))) {}
 
 ExtDatabase::~ExtDatabase() noexcept = default;
+
+void ExtDatabase::destroy() { return mImp->destroy(); }

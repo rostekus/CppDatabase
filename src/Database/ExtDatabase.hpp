@@ -20,8 +20,9 @@ class ExtDatabase : public db::IDatabase {
   void setKeyValue(const std::string& key, const std::string& value);
 
   std::string getValueKey(const std::string& key);
-
   std::filesystem::path getFullpath() const;
+
+  void destroy();
 
  private:
   const std::filesystem::path mFullpath;
