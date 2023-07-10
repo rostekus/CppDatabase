@@ -1,13 +1,20 @@
 cmake_minimum_required(VERSION 3.12)
 
-add_executable(db-tests
-    src/basic-tests.cpp
-    include/catch.hpp
-    include/tests.hpp
+project(tests)
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  # Specify the commit you depend on and update it regularly.
+  URL https://github.com/google/googletest/archive/5376968f6948923e2411081fd9372e71a59d8e77.zip
 )
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
 
-target_include_directories(db-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-target_link_libraries(db-tests PRIVATE db)
-
-target_compile_features(db-tests PRIVATE cxx_std_17)
+# Now simply link against gtest or gtest_main as needed. Eg
+add_executable(example
+	example.cpp
+	second.cpp)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/../src)
+target_link_libraries(example PUBLIC db
+	gtest_main)
