@@ -5,16 +5,18 @@
 #ifndef DB_HTTPSERVER_HPP
 #define DB_HTTPSERVER_HPP
 
-//#include <spdlog/spdlog.h>
-
-
+// #include <spdlog/spdlog.h>
+namespace httpserver {
 class HTTPServer {
-public:
-    HTTPServer() = default;
-   ~HTTPServer() = default;
-    void serve();
-    void testLog();
+ public:
+  HTTPServer();
+  HTTPServer(int port);
+  ~HTTPServer() = default;
+  void serve();
+  void testLog();
 
+ private:
+  int mPort;
 };
-
-#endif //DB_HTTPSERVER_HPP
+}  // namespace httpserver
+#endif  // DB_HTTPSERVER_HPP
