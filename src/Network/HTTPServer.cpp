@@ -1,19 +1,23 @@
 #include "HTTPServer.hpp"
 
 #include <netinet/in.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
 #include <cstdlib>
 #include <cstring>
+#include <regex>
+#include <sstream>
+#include <string>
+
+#include "../Types/Request.hpp"
 
 using namespace httpserver;
 
 HTTPServer::HTTPServer(int port) : mPort(port){};
 
 HTTPServer::HTTPServer() : mPort(8080){};
+
 void HTTPServer::serve() {
   int server_fd, new_socket;
   long valread;
@@ -39,37 +43,39 @@ void HTTPServer::serve() {
     perror("In listen");
     exit(EXIT_FAILURE);
   }
-  printf("HTTP Server Initialized\nPort: %d\n", mPort);
-
   int client_socket;
   while (1) {
-    char client_msg[4096] = "";
-
+    std::string client_msg;
     client_socket = accept(server_fd, NULL, NULL);
-
-    read(client_socket, client_msg, 4095);
-
-    // parsing client socket header to get HTTP method, route
-    char *method = "";
-    char *urlRoute = "";
-
-    char *client_http_header = strtok(client_msg, "\n");
-
-    char *header_token = strtok(client_http_header, " ");
-
-    int header_parse_counter = 0;
-
-    while (header_token != NULL) {
-      switch (header_parse_counter) {
-        case 0:
-          method = header_token;
-        case 1:
-          urlRoute = header_token;
+    std::string httpRequest;
+    char buffer[4096];
+    ssize_t bytesRead;
+    while ((bytesRead = recv(client_socket, buffer, sizeof(buffer), 0)) > 0) {
+      httpRequest.append(buffer, bytesRead);
+      if (httpRequest.find("\r\n\r\n") != std::string::npos) {
+        break;
       }
-      header_token = strtok(NULL, " ");
-      header_parse_counter++;
     }
 
+    std::string method;
+    std::string url;
+    std::string body;
+
+    std::regex requestLineRegex(R"((\w+)\s+([^\s]+)\s+HTTP\/\d+\.\d+)");
+    std::smatch requestLineMatch;
+    if (std::regex_search(httpRequest, requestLineMatch, requestLineRegex)) {
+      method = requestLineMatch[1];
+      url = requestLineMatch[2];
+    }
+
+    std::regex bodyRegex("\r\n\r\n(.*)$");
+    std::smatch bodyMatch;
+    if (std::regex_search(httpRequest, bodyMatch, bodyRegex)) {
+      body = bodyMatch[1];
+    }
+
+    request::RequestInsertValueKey req;
+    req.parseRequest(body);
     close(client_socket);
   }
 };
