@@ -7,4 +7,3 @@ TEST(ExtDatabase, insert) {
   EXPECT_EQ("value", db.getValueKey("key"));
   db.destroy();
 }
-TEST(test, two) { EXPECT_EQ(1000, 1000); }
