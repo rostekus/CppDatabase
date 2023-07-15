@@ -1,10 +1,10 @@
-#include "BodyParser.hpp"
+#include "RequestParser.hpp"
 
 #include <csignal>
 #include <stdexcept>
 
-void BodyParser::parseBody(std::string jsonString,
-                           std::map<std::string, std::string>& bodyMap) {
+void httpserver::RequestParser::parseBody(
+    std::string jsonString, std::map<std::string, std::string>& bodyMap) {
   if (!bodyMap.empty()) {
     throw std::invalid_argument("map must be empty");
   }
