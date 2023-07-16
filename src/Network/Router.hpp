@@ -8,6 +8,7 @@
 #include "IRouter.hpp"
 #include "RequestParser.hpp"
 #include "Types/Request.hpp"
+#include "Types/Response.hpp"
 
 namespace httpserver {
 
@@ -17,7 +18,7 @@ class Router : public IRouter {
  public:
   Router(std::unique_ptr<IRequestParser> requestParser);
   void registerRoute(std::string url, Method method, IHandler handler);
-  void route(std::string request);
+  Response route(std::string request) override;
 
  private:
   std::unique_ptr<IRequestParser> requestParser;
