@@ -1,20 +1,58 @@
 #include "RequestParser.hpp"
-
+#include "Types/Request.hpp"
+#include "Types/Request.hpp"
 #include <csignal>
 #include <stdexcept>
+#include <string>
 
-void httpserver::RequestParser::parseBody(
-    std::string jsonString, std::map<std::string, std::string>& bodyMap) {
-  if (!bodyMap.empty()) {
-    throw std::invalid_argument("map must be empty");
-  }
+#include <regex>
+#include <sstream>
+#include <string>
+#include <unordered_map>
 
-  if (jsonString.empty() || jsonString.front() != '{' ||
-      jsonString.back() != '}') {
+const std::unordered_map<std::string, httpserver::Method> httpserver::RequestParser::methodMap  = {
+        {"GET", httpserver::Method::GET},
+        {"POST", httpserver::Method::POST},
+        {"DELETE",httpserver::Method::DELETE},
+        {"PUT", httpserver::Method::PUT},
+        {"PATCH",httpserver::Method::PATCH}
+    };
+
+httpserver::Method httpserver::RequestParser::getMethod(std::string methodString){
+    auto it = methodMap.find(methodString);
+    if (it != methodMap.end()) {
+        return it->second;
+    } else {
+        return Method::GET;
+    }
+ 
+}
+httpserver::Request httpserver::RequestParser::parseRequest(std::string httpRequest) {
+
+    std::string method;
+    std::string url;
+    std::string body;
+
+    std::regex requestLineRegex(R"((\w+)\s+([^\s]+)\s+HTTP\/\d+\.\d+)");
+    std::smatch requestLineMatch;
+    if (std::regex_search(httpRequest, requestLineMatch, requestLineRegex)) {
+      method = requestLineMatch[1];
+      url = requestLineMatch[2];
+    }
+
+    std::regex bodyRegex("\r\n\r\n(.*)$");
+    std::smatch bodyMatch;
+    if (std::regex_search(httpRequest, bodyMatch, bodyRegex)) {
+      body = bodyMatch[1];
+    }
+    std::map<std::string, std::string> requestBodyJson;
+    std::map<std::string, std::string> headers;
+  if (body.empty() || body.front() != '{' ||
+      body.back() != '}') {
     throw std::invalid_argument("invalid JSON string format");
   }
 
-  std::string jsonContent = jsonString.substr(1, jsonString.length() - 2);
+  std::string jsonContent = body.substr(1, body.length() - 2);
 
   size_t startPos = 0;
   while (startPos < jsonContent.length()) {
@@ -50,8 +88,13 @@ void httpserver::RequestParser::parseBody(
       value = value.substr(1, value.length() - 2);
     }
 
-    bodyMap[key] = value;
+    requestBodyJson[key] = value;
 
     startPos = commaPos + 1;
   }
+
+  Request r(
+		  getMethod(method),url, headers, requestBodyJson
+		  );
+	return r;
 }
