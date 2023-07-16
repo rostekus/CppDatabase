@@ -6,8 +6,9 @@
 #define DB_HTTPSERVER_HPP
 
 // #include <spdlog/spdlog.h>
-#include "IRouter.hpp"
 #include <memory>
+
+#include "IRouter.hpp"
 namespace httpserver {
 class HTTPServer {
  public:
@@ -16,7 +17,8 @@ class HTTPServer {
   ~HTTPServer() = default;
   void serve();
   void testLog();
-void registerRouter(std::unique_ptr<IRouter> router);
+  void registerRouter(std::unique_ptr<IRouter> router);
+
  private:
   std::unique_ptr<IRouter> mRouter;
   int mPort;

@@ -1,54 +1,51 @@
 #include "RequestParser.hpp"
-#include "Types/Request.hpp"
-#include "Types/Request.hpp"
-#include <csignal>
-#include <stdexcept>
-#include <string>
 
+#include <csignal>
 #include <regex>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <unordered_map>
 
-const std::unordered_map<std::string, httpserver::Method> httpserver::RequestParser::methodMap  = {
+#include "Types/Request.hpp"
+
+const std::unordered_map<std::string, httpserver::Method>
+    httpserver::RequestParser::methodMap = {
         {"GET", httpserver::Method::GET},
         {"POST", httpserver::Method::POST},
-        {"DELETE",httpserver::Method::DELETE},
+        {"DELETE", httpserver::Method::DELETE},
         {"PUT", httpserver::Method::PUT},
-        {"PATCH",httpserver::Method::PATCH}
-    };
+        {"PATCH", httpserver::Method::PATCH}};
 
-httpserver::Method httpserver::RequestParser::getMethod(std::string methodString){
-    auto it = methodMap.find(methodString);
-    if (it != methodMap.end()) {
-        return it->second;
-    } else {
-        return Method::GET;
-    }
- 
+httpserver::Method httpserver::RequestParser::getMethod(
+    std::string methodString) {
+  auto it = methodMap.find(methodString);
+  if (it != methodMap.end()) {
+    return it->second;
+  }
+  throw std::invalid_argument("invalid method");
 }
-httpserver::Request httpserver::RequestParser::parseRequest(std::string httpRequest) {
+httpserver::Request httpserver::RequestParser::parseRequest(
+    std::string httpRequest) {
+  std::string method;
+  std::string url;
+  std::string body;
 
-    std::string method;
-    std::string url;
-    std::string body;
+  std::regex requestLineRegex(R"((\w+)\s+([^\s]+)\s+HTTP\/\d+\.\d+)");
+  std::smatch requestLineMatch;
+  if (std::regex_search(httpRequest, requestLineMatch, requestLineRegex)) {
+    method = requestLineMatch[1];
+    url = requestLineMatch[2];
+  }
 
-    std::regex requestLineRegex(R"((\w+)\s+([^\s]+)\s+HTTP\/\d+\.\d+)");
-    std::smatch requestLineMatch;
-    if (std::regex_search(httpRequest, requestLineMatch, requestLineRegex)) {
-      method = requestLineMatch[1];
-      url = requestLineMatch[2];
-    }
-
-    std::regex bodyRegex("\r\n\r\n(.*)$");
-    std::smatch bodyMatch;
-    if (std::regex_search(httpRequest, bodyMatch, bodyRegex)) {
-      body = bodyMatch[1];
-    }
-    std::map<std::string, std::string> requestBodyJson;
-    std::map<std::string, std::string> headers;
-  if (body.empty() || body.front() != '{' ||
-      body.back() != '}') {
+  std::regex bodyRegex("\r\n\r\n(.*)$");
+  std::smatch bodyMatch;
+  if (std::regex_search(httpRequest, bodyMatch, bodyRegex)) {
+    body = bodyMatch[1];
+  }
+  std::map<std::string, std::string> requestBodyJson;
+  std::map<std::string, std::string> headers;
+  if (body.empty() || body.front() != '{' || body.back() != '}') {
     throw std::invalid_argument("invalid JSON string format");
   }
 
@@ -93,8 +90,6 @@ httpserver::Request httpserver::RequestParser::parseRequest(std::string httpRequ
     startPos = commaPos + 1;
   }
 
-  Request r(
-		  getMethod(method),url, headers, requestBodyJson
-		  );
-	return r;
+  Request r(getMethod(method), url, headers, requestBodyJson);
+  return r;
 }

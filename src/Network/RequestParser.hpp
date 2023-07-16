@@ -8,11 +8,11 @@
 #include "Types/Request.hpp"
 
 namespace httpserver {
-class RequestParser: public IRequestParser {
+class RequestParser : public IRequestParser {
  public:
-	Method getMethod(std::string);
-	Request parseRequest(std::string httpRequest) override;
-	static const std::unordered_map<std::string, Method> methodMap;
+  Method getMethod(std::string);
+  Request parseRequest(std::string httpRequest) override;
+  static const std::unordered_map<std::string, Method> methodMap;
 };
 }  // namespace httpserver
 #endif

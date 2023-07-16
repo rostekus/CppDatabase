@@ -14,12 +14,12 @@ typedef std::map<std::string, std::string> BodyJson;
 
 class Request {
  public:
-	std::string url;
+  std::string url;
   Method method;
   Headers headers;
   BodyJson body_json;
-  Request(
-		  Method method,  std::string url,Headers headers, BodyJson body ) :method(method), headers(headers), body_json(body), url(url){};
+  Request(Method method, std::string url, Headers headers, BodyJson body)
+      : method(method), headers(headers), body_json(body), url(url){};
 };
 }  // namespace httpserver
 #endif  // !DB_REQUEST

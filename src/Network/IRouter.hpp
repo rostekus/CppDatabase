@@ -10,8 +10,9 @@ namespace httpserver {
 
 class IRouter {
  public:
-  virtual void registerRoute(std::string url, Method method, IHandler handler)=0;
-  virtual void route(std::string) =0;
+  virtual void registerRoute(std::string url, Method method,
+                             IHandler handler) = 0;
+  virtual void route(std::string) = 0;
 };
 }  // namespace httpserver
 #endif

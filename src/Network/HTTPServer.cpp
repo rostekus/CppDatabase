@@ -1,16 +1,16 @@
 #include "HTTPServer.hpp"
 
-#include <algorithm>
-#include <memory>
 #include <netinet/in.h>
-#include <ostream>
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include <algorithm>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <map>
+#include <memory>
+#include <ostream>
 #include <regex>
 #include <sstream>
 #include <string>
@@ -26,9 +26,8 @@ HTTPServer::HTTPServer(int port) : mPort(port){};
 
 HTTPServer::HTTPServer() : mPort(8080){};
 
-
-void HTTPServer::registerRouter(std::unique_ptr<IRouter> router){
-	mRouter = std::move(router);
+void HTTPServer::registerRouter(std::unique_ptr<IRouter> router) {
+  mRouter = std::move(router);
 }
 
 void HTTPServer::serve() {
@@ -68,11 +67,11 @@ void HTTPServer::serve() {
         break;
       }
     }
-	std::cout << httpRequest << std::endl;
-	auto reqParser = std::make_unique<RequestParser>();
-	Router router(std::move(reqParser));
-	std::cout << "entering";
-	router.route(httpRequest);
+    std::cout << httpRequest << std::endl;
+    auto reqParser = std::make_unique<RequestParser>();
+    Router router(std::move(reqParser));
+    std::cout << "entering";
+    router.route(httpRequest);
 
     close(client_socket);
   }
