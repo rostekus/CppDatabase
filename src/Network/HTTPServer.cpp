@@ -1,22 +1,35 @@
 #include "HTTPServer.hpp"
 
+#include <algorithm>
+#include <memory>
 #include <netinet/in.h>
+#include <ostream>
 #include <sys/socket.h>
 #include <unistd.h>
 
 #include <cstdlib>
 #include <cstring>
+#include <iostream>
+#include <map>
 #include <regex>
 #include <sstream>
 #include <string>
 
-#include "../Types/Request.hpp"
+#include "IRouter.hpp"
+#include "RequestParser.hpp"
+#include "Router.hpp"
+#include "Types/Request.hpp"
 
 using namespace httpserver;
 
 HTTPServer::HTTPServer(int port) : mPort(port){};
 
 HTTPServer::HTTPServer() : mPort(8080){};
+
+
+void HTTPServer::registerRouter(std::unique_ptr<IRouter> router){
+	mRouter = std::move(router);
+}
 
 void HTTPServer::serve() {
   int server_fd, new_socket;
@@ -45,7 +58,6 @@ void HTTPServer::serve() {
   }
   int client_socket;
   while (1) {
-    std::string client_msg;
     client_socket = accept(server_fd, NULL, NULL);
     std::string httpRequest;
     char buffer[4096];
@@ -56,26 +68,12 @@ void HTTPServer::serve() {
         break;
       }
     }
+	std::cout << httpRequest << std::endl;
+	auto reqParser = std::make_unique<RequestParser>();
+	Router router(std::move(reqParser));
+	std::cout << "entering";
+	router.route(httpRequest);
 
-    std::string method;
-    std::string url;
-    std::string body;
-
-    std::regex requestLineRegex(R"((\w+)\s+([^\s]+)\s+HTTP\/\d+\.\d+)");
-    std::smatch requestLineMatch;
-    if (std::regex_search(httpRequest, requestLineMatch, requestLineRegex)) {
-      method = requestLineMatch[1];
-      url = requestLineMatch[2];
-    }
-
-    std::regex bodyRegex("\r\n\r\n(.*)$");
-    std::smatch bodyMatch;
-    if (std::regex_search(httpRequest, bodyMatch, bodyRegex)) {
-      body = bodyMatch[1];
-    }
-
-    request::RequestInsertValueKey req;
-    req.parseRequest(body);
     close(client_socket);
   }
-};
+}
