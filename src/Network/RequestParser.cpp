@@ -31,12 +31,25 @@ httpserver::Request httpserver::RequestParser::parseRequest(
   std::string url;
   std::string body;
 
+  std::map<std::string, std::string> headers;
   std::regex requestLineRegex(R"((\w+)\s+([^\s]+)\s+HTTP\/\d+\.\d+)");
   std::smatch requestLineMatch;
   if (std::regex_search(httpRequest, requestLineMatch, requestLineRegex)) {
     method = requestLineMatch[1];
     url = requestLineMatch[2];
   }
+    std::regex headerRegex(R"(([^:]+): ([^\r\n]+))");
+    std::sregex_iterator headerIter(httpRequest.begin(), httpRequest.end(), headerRegex);
+    std::sregex_iterator headerEnd;
+
+    while (headerIter != headerEnd) {
+        std::smatch headerMatch = *headerIter;
+        std::string headerName = headerMatch[1];
+        std::string headerValue = headerMatch[2];
+        headers[headerName] = headerValue;
+        ++headerIter;
+    }
+
 
   std::regex bodyRegex("\r\n\r\n(.*)$");
   std::smatch bodyMatch;
@@ -44,7 +57,6 @@ httpserver::Request httpserver::RequestParser::parseRequest(
     body = bodyMatch[1];
   }
   std::map<std::string, std::string> requestBodyJson;
-  std::map<std::string, std::string> headers;
   if (body.empty() || body.front() != '{' || body.back() != '}') {
     throw std::invalid_argument("invalid JSON string format");
   }
