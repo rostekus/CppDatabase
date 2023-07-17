@@ -18,10 +18,17 @@ add_library(db Database/IDatabase.cpp
         Network/HTTPServer.cpp
         Log/Logger.cpp
         Log/Logger.hpp
-		Network/Types/Request.cpp
 		Network/Types/Request.hpp
-		Network/BodyParser.cpp
-		Network/BodyParser.hpp
+		Network/Types/Response.hpp
+		Network/RequestParser.cpp
+		Network/RequestParser.hpp
+		Network/Router.cpp
+		Network/Router.hpp
+		Network/HTTPServer.cpp
+		Network/HTTPServer.hpp
+		Network/API/IHandler.hpp
+		Network/API/IRequestParser.hpp
+		Network/API/IRouter.hpp
 		)
 
 add_executable(Database main.cpp)
