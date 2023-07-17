@@ -3,9 +3,10 @@
 
 #include <map>
 #include <memory>
+#include <string>
 
-#include "IHandler.hpp"
-#include "IRouter.hpp"
+#include "API/IHandler.hpp"
+#include "API/IRouter.hpp"
 #include "RequestParser.hpp"
 #include "Types/Request.hpp"
 #include "Types/Response.hpp"
@@ -17,8 +18,8 @@ typedef std::map<std::pair<std::string, Method>, IHandler> Routes;
 class Router : public IRouter {
  public:
   Router(std::unique_ptr<IRequestParser> requestParser);
-  void registerRoute(std::string url, Method method, IHandler handler);
-  Response route(std::string request) override;
+  void registerRoute(std::string url, Method method, IHandler handler) override;
+  std::string route(std::string request) override;
 
  private:
   std::unique_ptr<IRequestParser> requestParser;

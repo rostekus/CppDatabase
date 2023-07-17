@@ -15,7 +15,6 @@
 #include <sstream>
 #include <string>
 
-#include "IRouter.hpp"
 #include "RequestParser.hpp"
 #include "Router.hpp"
 #include "Types/Request.hpp"

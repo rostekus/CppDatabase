@@ -1,8 +1,8 @@
 #ifndef HPP_IHANDLER
 #define HPP_IHANDLER
 
-#include "Types/Request.hpp"
-#include "Types/Response.hpp"
+#include "../Types/Request.hpp"
+#include "../Types/Response.hpp"
 
 namespace httpserver {
 class IHandler {
