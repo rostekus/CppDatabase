@@ -1,4 +1,5 @@
 #ifndef HPP_IHANDLER
+
 #define HPP_IHANDLER
 
 #include "../Types/Request.hpp"
@@ -7,7 +8,7 @@
 namespace httpserver {
 class IHandler {
  public:
-  virtual Response handle(Request req);
+  virtual Response handle(Request req) = 0;
 };
 }  // namespace httpserver
 #endif  // HPP_IHANDLER

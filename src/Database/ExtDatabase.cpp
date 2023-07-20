@@ -95,7 +95,7 @@ void ExtDatabase::setKeyValue(const std::string &key,
 }
 
 ExtDatabase::ExtDatabase(std::string dbname)
-    : mImp(std::unique_ptr<Imp>(std::make_unique<Imp>(dbname))) {}
+    : mImp(std::make_unique<Imp>(dbname)) {}
 
 ExtDatabase::~ExtDatabase() noexcept = default;
 

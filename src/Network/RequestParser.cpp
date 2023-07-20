@@ -38,18 +38,18 @@ httpserver::Request httpserver::RequestParser::parseRequest(
     method = requestLineMatch[1];
     url = requestLineMatch[2];
   }
-    std::regex headerRegex(R"(([^:]+): ([^\r\n]+))");
-    std::sregex_iterator headerIter(httpRequest.begin(), httpRequest.end(), headerRegex);
-    std::sregex_iterator headerEnd;
+  std::regex headerRegex(R"(([^:]+): ([^\r\n]+))");
+  std::sregex_iterator headerIter(httpRequest.begin(), httpRequest.end(),
+                                  headerRegex);
+  std::sregex_iterator headerEnd;
 
-    while (headerIter != headerEnd) {
-        std::smatch headerMatch = *headerIter;
-        std::string headerName = headerMatch[1];
-        std::string headerValue = headerMatch[2];
-        headers[headerName] = headerValue;
-        ++headerIter;
-    }
-
+  while (headerIter != headerEnd) {
+    std::smatch headerMatch = *headerIter;
+    std::string headerName = headerMatch[1];
+    std::string headerValue = headerMatch[2];
+    headers[headerName] = headerValue;
+    ++headerIter;
+  }
 
   std::regex bodyRegex("\r\n\r\n(.*)$");
   std::smatch bodyMatch;
