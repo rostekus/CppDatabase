@@ -16,8 +16,6 @@ add_library(db Database/IDatabase.cpp
         Database/ExtDatabase.hpp
         Network/HTTPServer.hpp
         Network/HTTPServer.cpp
-        Log/Logger.cpp
-        Log/Logger.hpp
 		Network/Types/Request.hpp
 		Network/Types/Response.hpp
 		Network/RequestParser.cpp
@@ -29,6 +27,8 @@ add_library(db Database/IDatabase.cpp
 		Network/API/IHandler.hpp
 		Network/API/IRequestParser.hpp
 		Network/API/IRouter.hpp
+		Network/Handlers.cpp
+		Network/Handlers.hpp
 		)
 
 add_executable(Database main.cpp)
