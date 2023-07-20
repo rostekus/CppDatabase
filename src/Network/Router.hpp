@@ -7,18 +7,21 @@
 
 #include "API/IHandler.hpp"
 #include "API/IRouter.hpp"
+#include "Handlers.hpp"
 #include "RequestParser.hpp"
 #include "Types/Request.hpp"
 #include "Types/Response.hpp"
 
 namespace httpserver {
 
-typedef std::map<std::pair<std::string, Method>, IHandler> Routes;
+typedef std::map<std::pair<std::string, Method>, std::unique_ptr<IHandler>>
+    Routes;
 
 class Router : public IRouter {
  public:
   Router(std::unique_ptr<IRequestParser> requestParser);
-  void registerRoute(std::string url, Method method, IHandler handler) override;
+  void registerRoute(std::string url, Method method,
+                     std::unique_ptr<IHandler> handler) override;
   std::string route(std::string request) override;
 
  private:
