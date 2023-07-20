@@ -15,6 +15,9 @@
 #include <sstream>
 #include <string>
 
+#include "../Database/ExtDatabase.hpp"
+#include "API/IHandler.hpp"
+#include "Handlers.hpp"
 #include "RequestParser.hpp"
 #include "Router.hpp"
 #include "Types/Request.hpp"
@@ -66,11 +69,7 @@ void HTTPServer::serve() {
         break;
       }
     }
-    std::cout << httpRequest << std::endl;
-    auto reqParser = std::make_unique<RequestParser>();
-    Router router(std::move(reqParser));
-    std::cout << "entering";
-    router.route(httpRequest);
+    mRouter->route(httpRequest);
 
     close(client_socket);
   }
