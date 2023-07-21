@@ -21,11 +21,13 @@ void httpserver::Router::registerRoute(std::string url, Method method,
 }
 std::string httpserver::Router::route(std::string httpRequest) {
   Request req = requestParser->parseRequest(httpRequest);
-  std::cout << "GOT :" << req.url << " " << req.method << "\n";
+  std::cout << "Request " << req.url << " Method " << req.method << "\n";
   auto handler = std::move(m_routes[std::make_pair(req.url, req.method)]);
+  Response resp;
   if (handler != nullptr) {
-    std::cout << "entered the handler \n";
-    Response resp = handler->handle(req);
+    std::cout << "handling \n";
+    resp = handler->handle(req);
   }
-  return std::string("");
+
+  return responseSerializer->serialize(resp);
 }
