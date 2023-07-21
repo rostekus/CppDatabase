@@ -29,6 +29,8 @@ add_library(db Database/IDatabase.cpp
 		Network/API/IRouter.hpp
 		Network/Handlers.cpp
 		Network/Handlers.hpp
+		Network/ResponseSerializer.hpp
+		Network/ResponseSerializer.cpp
 		)
 
 add_executable(Database main.cpp)
