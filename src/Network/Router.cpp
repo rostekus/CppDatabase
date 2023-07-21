@@ -25,9 +25,8 @@ std::string httpserver::Router::route(std::string httpRequest) {
   auto handler = std::move(m_routes[std::make_pair(req.url, req.method)]);
   Response resp;
   if (handler != nullptr) {
-    std::cout << "handling \n";
     resp = handler->handle(req);
   }
-
+m_routes[std::make_pair(req.url, req.method)] = std::move(handler);
   return responseSerializer->serialize(resp);
 }
