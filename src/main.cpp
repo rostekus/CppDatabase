@@ -28,3 +28,4 @@ int main() {
   s.registerRouter(std::move(router));
   s.serve();
   return 0;
+}
