@@ -27,6 +27,13 @@ class InsertKeyValueHandler : public DBHandler {
   Response handle(Request req) override;
 };
 
+class GetKeyValueHandler : public DBHandler {
+ public:
+  GetKeyValueHandler(std::shared_ptr<db::IDatabase> db)
+      : DBHandler(std::move(db)){};
+  Response handle(Request req) override;
+};
+
 }  // namespace httpserver
 
 #endif  // !HPP_HANDLERS
