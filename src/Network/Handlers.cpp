@@ -26,7 +26,6 @@ Response GetKeyValueHandler::handle(Request req) {
   Body body;
   std::string value;
   if (db != nullptr) {
-    std::cout << "NOT NULL \n";
     for (auto it = keyValuesMap.begin(); it != keyValuesMap.end(); it++) {
       try {
         value = db->getValueKey(it->first);
