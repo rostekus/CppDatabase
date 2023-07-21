@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <iterator>
 #include <map>
 #include <memory>
 #include <ostream>
@@ -60,8 +61,8 @@ void HTTPServer::serve() {
   int client_socket;
   while (1) {
     client_socket = accept(server_fd, NULL, NULL);
-    std::string httpRequest;
-    char buffer[4096];
+    HTTPRequest httpRequest;
+    char buffer[BUFFER_SIZE];
     ssize_t bytesRead;
     while ((bytesRead = recv(client_socket, buffer, sizeof(buffer), 0)) > 0) {
       httpRequest.append(buffer, bytesRead);
@@ -69,8 +70,11 @@ void HTTPServer::serve() {
         break;
       }
     }
-    mRouter->route(httpRequest);
+    HTTPResponse serverResponseHTTP = mRouter->route(httpRequest);
+    char responseCharArr[BUFFER_SIZE] = "";
+    strcpy(responseCharArr, serverResponseHTTP.c_str());
 
+    send(client_socket, responseCharArr, sizeof(responseCharArr), 0);
     close(client_socket);
   }
 }

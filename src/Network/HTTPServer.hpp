@@ -7,9 +7,14 @@
 
 // #include <spdlog/spdlog.h>
 #include <memory>
+#include <string>
 
 #include "API/IRouter.hpp"
 namespace httpserver {
+
+typedef std::string HTTPRequest;
+typedef std::string HTTPResponse;
+const int BUFFER_SIZE = 4096;
 class HTTPServer {
  public:
   HTTPServer();
