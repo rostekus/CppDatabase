@@ -6,13 +6,16 @@
 
 #include "API/IRequestParser.hpp"
 #include "Types/Request.hpp"
+#include "Types/Response.hpp"
 
 namespace httpserver {
 class RequestParser : public IRequestParser {
  public:
-  Method getMethod(std::string);
   Request parseRequest(std::string httpRequest) override;
   static const std::unordered_map<std::string, Method> methodMap;
+
+ private:
+  Method getMethod(std::string);
 };
 }  // namespace httpserver
 #endif

@@ -9,6 +9,7 @@
 #include "API/IRouter.hpp"
 #include "Handlers.hpp"
 #include "RequestParser.hpp"
+#include "ResponseSerializer.hpp"
 #include "Types/Request.hpp"
 #include "Types/Response.hpp"
 
@@ -26,6 +27,7 @@ class Router : public IRouter {
 
  private:
   std::unique_ptr<IRequestParser> requestParser;
+  std::unique_ptr<ResponseSerializer> responseSerializer;
   Routes m_routes;
 };
 }  // namespace httpserver

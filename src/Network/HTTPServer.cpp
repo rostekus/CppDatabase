@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <iterator>
 #include <map>
 #include <memory>
 #include <ostream>
@@ -15,6 +16,9 @@
 #include <sstream>
 #include <string>
 
+#include "../Database/ExtDatabase.hpp"
+#include "API/IHandler.hpp"
+#include "Handlers.hpp"
 #include "RequestParser.hpp"
 #include "Router.hpp"
 #include "Types/Request.hpp"
@@ -57,8 +61,8 @@ void HTTPServer::serve() {
   int client_socket;
   while (1) {
     client_socket = accept(server_fd, NULL, NULL);
-    std::string httpRequest;
-    char buffer[4096];
+    HTTPRequest httpRequest;
+    char buffer[BUFFER_SIZE];
     ssize_t bytesRead;
     while ((bytesRead = recv(client_socket, buffer, sizeof(buffer), 0)) > 0) {
       httpRequest.append(buffer, bytesRead);
@@ -66,12 +70,11 @@ void HTTPServer::serve() {
         break;
       }
     }
-    std::cout << httpRequest << std::endl;
-    auto reqParser = std::make_unique<RequestParser>();
-    Router router(std::move(reqParser));
-    std::cout << "entering";
-    router.route(httpRequest);
+    HTTPResponse serverResponseHTTP = mRouter->route(httpRequest);
+    char responseCharArr[BUFFER_SIZE] = "";
+    strcpy(responseCharArr, serverResponseHTTP.c_str());
 
+    send(client_socket, responseCharArr, sizeof(responseCharArr), 0);
     close(client_socket);
   }
 }

@@ -27,6 +27,7 @@ class ExtDatabase::Imp : public db::IDatabase {
   const std::string mDbName;
   const std::string mFullpath;
 };
+
 void ExtDatabase::Imp::destroy() {
   std::cout << "deleted" << std::endl;
   fs::remove_all(".groundupdb");
@@ -51,7 +52,6 @@ std::string ExtDatabase::Imp::getValueKey(const std::string &key) {
 
   value.assign((std::istreambuf_iterator<char>(t)),
                std::istreambuf_iterator<char>());
-
   return value;
 }
 
