@@ -18,11 +18,13 @@ int main() {
   auto reqParser = std::make_unique<httpserver::RequestParser>();
   auto router = std::make_unique<httpserver::Router>(std::move(reqParser));
   auto db = std::make_shared<extdb::ExtDatabase>("mydb");
-  std::unique_ptr<httpserver::IHandler> handler =
-      std::make_unique<httpserver::InsertKeyValueHandler>(std::move(db));
-  router->registerRoute("/insert", httpserver::Method::POST,
-                        std::move(handler));
+  std::unique_ptr<httpserver::IHandler> insertHandler =
+      std::make_unique<httpserver::InsertKeyValueHandler>(db);
+  router->registerRoute("/keyvalue", httpserver::Method::POST,
+                        std::move(insertHandler));
+  auto getHandler = std::make_unique<httpserver::GetKeyValueHandler>(db);
+  router->registerRoute("/keyvalue", httpserver::Method::GET,
+                        std::move(getHandler));
   s.registerRouter(std::move(router));
   s.serve();
   return 0;
-}
