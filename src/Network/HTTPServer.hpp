@@ -5,7 +5,6 @@
 #ifndef DB_HTTPSERVER_HPP
 #define DB_HTTPSERVER_HPP
 
-// #include <spdlog/spdlog.h>
 #include <memory>
 #include <string>
 
