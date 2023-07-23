@@ -17,11 +17,12 @@ class ExtDatabase : public db::IDatabase {
 
   ~ExtDatabase() noexcept;
 
-  void setKeyValue(const std::string& key, const std::string& value);
+  void setKeyValue(const std::string& key, const std::string& value) override;
 
-  std::string getValueKey(const std::string& key);
-  std::filesystem::path getFullpath() const;
+  std::string getValueKey(const std::string& key) override;
+  std::filesystem::path getFullpath() const override;
 
+  std::map<std::string, std::string> getAllKeyValue() override;
   void destroy();
 
  private:
