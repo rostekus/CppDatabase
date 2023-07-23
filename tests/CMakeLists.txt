@@ -12,11 +12,11 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # Now simply link against gtest or gtest_main as needed. Eg
-add_executable(example
+add_executable(Tests
 	parser-tests.cpp
 	serializer-tests.cpp
 	db-tests.cpp)
 
 include_directories(${CMAKE_CURRENT_LIST_DIR}/../src)
-target_link_libraries(example PUBLIC db
+target_link_libraries(Tests PUBLIC db
 	gtest_main)
