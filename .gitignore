@@ -6,3 +6,7 @@ cmake-build-Release
 python_db_lib/env
 python_db_lib/python_db_lib/__pycache__
 python_db_lib/python_db_lib.egg-info
+presentation/backend/app/services/__pycache__
+presentation/backend/app/routes/__pycache__
+presentation/backend/app/db_lib/__pycache__
+presentation/backend/app/__pycache__

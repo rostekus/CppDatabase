@@ -34,6 +34,13 @@ class GetKeyValueHandler : public DBHandler {
   Response handle(Request req) override;
 };
 
+class GetAllKeyValueHandler : public DBHandler {
+ public:
+  GetAllKeyValueHandler(std::shared_ptr<db::IDatabase> db)
+      : DBHandler(std::move(db)){};
+  Response handle(Request req) override;
+};
+
 }  // namespace httpserver
 
 #endif  // !HPP_HANDLERS

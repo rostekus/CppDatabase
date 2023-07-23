@@ -34,6 +34,8 @@ void HTTPServer::registerRouter(std::unique_ptr<IRouter> router) {
 }
 
 void HTTPServer::serve() {
+  std::cout << "Starting server. Port: " << mPort << "\n";
+
   int server_fd, new_socket;
   long valread;
   struct sockaddr_in address;

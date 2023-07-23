@@ -51,12 +51,18 @@ httpserver::Request httpserver::RequestParser::parseRequest(
     ++headerIter;
   }
 
+  std::map<std::string, std::string> requestBodyJson;
+  Method requestMethod = getMethod(method);
+  if (requestMethod == Method::GET) {
+    Request r(requestMethod, url, headers, requestBodyJson);
+    return r;
+  }
   std::regex bodyRegex("\r\n\r\n(.*)$");
   std::smatch bodyMatch;
+
   if (std::regex_search(httpRequest, bodyMatch, bodyRegex)) {
     body = bodyMatch[1];
   }
-  std::map<std::string, std::string> requestBodyJson;
   if (body.empty() || body.front() != '{' || body.back() != '}') {
     throw std::invalid_argument("invalid JSON string format");
   }
@@ -102,6 +108,6 @@ httpserver::Request httpserver::RequestParser::parseRequest(
     startPos = commaPos + 1;
   }
 
-  Request r(getMethod(method), url, headers, requestBodyJson);
+  Request r(requestMethod, url, headers, requestBodyJson);
   return r;
 }

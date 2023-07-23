@@ -4,10 +4,13 @@
 
 #include "ExtDatabase.hpp"
 
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <iterator>
+#include <map>
+#include <string>
 using namespace extdb;
 namespace fs = std::filesystem;
 
@@ -22,12 +25,35 @@ class ExtDatabase::Imp : public db::IDatabase {
   void destroy();
   void setKeyValue(const std::string &key, const std::string &value) override;
   std::string getValueKey(const std::string &key) override;
+  std::map<std::string, std::string> getAllKeyValue() override;
 
  private:
   const std::string mDbName;
   const std::string mFullpath;
 };
 
+std::map<std::string, std::string> ExtDatabase::Imp::getAllKeyValue() {
+  std::map<std::string, std::string> keyValueMap;
+  for (const auto &fileEntry : std::filesystem::directory_iterator(mFullpath)) {
+    const std::string filePath = fileEntry.path().string();
+
+    if (filePath.size() >= 11 &&
+        filePath.substr(filePath.size() - 10) == "_string.kv") {
+      const std::string key = filePath.substr(
+          mFullpath.length() + 1, filePath.size() - mFullpath.length() - 12);
+      std::ifstream t(filePath);
+      std::string value;
+      t.seekg(0, std::ios::end);
+      value.reserve(t.tellg());
+      t.seekg(0, std::ios::beg);
+      value.assign((std::istreambuf_iterator<char>(t)),
+                   std::istreambuf_iterator<char>());
+      keyValueMap[key] = value;
+    }
+  }
+
+  return keyValueMap;
+}
 void ExtDatabase::Imp::destroy() {
   std::cout << "deleted" << std::endl;
   fs::remove_all(".groundupdb");
@@ -100,3 +126,7 @@ ExtDatabase::ExtDatabase(std::string dbname)
 ExtDatabase::~ExtDatabase() noexcept = default;
 
 void ExtDatabase::destroy() { return mImp->destroy(); }
+
+std::map<std::string, std::string> ExtDatabase::getAllKeyValue() {
+  return mImp->getAllKeyValue();
+}
