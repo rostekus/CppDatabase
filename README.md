@@ -1,3 +1,5 @@
+[![Run GTests](https://github.com/rostekus/db/actions/workflows/gtest.yaml/badge.svg?branch=main)](https://github.com/rostekus/db/actions/workflows/gtest.yaml)
+
 # Database Key-Value Implementation and HTTP Server
 
 This repository contains a simple implementation of a key-value database and an HTTP server built from scratch using UNIX sockets. The project includes libraries in Python and Golang for interacting with the HTTP server.
