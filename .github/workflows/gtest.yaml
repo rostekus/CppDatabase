@@ -2,9 +2,15 @@ name: Run GTests
 
 on:
   push:
+    paths:
+      - 'src/**'
+      - 'tests/**'
     branches:
       - main
   pull_request:
+    paths:
+      - 'src/**'
+      - 'tests/**'
     branches:
       - main
 
