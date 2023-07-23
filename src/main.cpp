@@ -25,6 +25,10 @@ int main() {
   auto getHandler = std::make_unique<httpserver::GetKeyValueHandler>(db);
   router->registerRoute("/keyvalue", httpserver::Method::GET,
                         std::move(getHandler));
+  auto getAll = std::make_unique<httpserver::GetAllKeyValueHandler>(db);
+  router->registerRoute("/allkeyvalues", httpserver::Method::GET,
+                        std::move(getAll));
+
   s.registerRouter(std::move(router));
   s.serve();
   return 0;

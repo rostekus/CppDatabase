@@ -3,6 +3,8 @@
 #include <iostream>
 #include <locale>
 #include <memory>
+#include <tuple>
+#include <utility>
 
 #include "Types/Response.hpp"
 
@@ -41,3 +43,13 @@ Response GetKeyValueHandler::handle(Request req) {
 }
 
 std::shared_ptr<db::IDatabase> DBHandler::getDB() { return database; }
+
+Response GetAllKeyValueHandler::handle(Request req) {
+  auto db = getDB();
+  std::cout << "in all "
+            << "\n";
+  auto allKeyValuesMap = db->getAllKeyValue();
+  Headers h;
+  Response resp(200, h, allKeyValuesMap);
+  return resp;
+}
