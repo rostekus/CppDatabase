@@ -14,6 +14,7 @@ FetchContent_MakeAvailable(googletest)
 # Now simply link against gtest or gtest_main as needed. Eg
 add_executable(example
 	parser-tests.cpp
+	serializer-tests.cpp
 	db-tests.cpp)
 
 include_directories(${CMAKE_CURRENT_LIST_DIR}/../src)
