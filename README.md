@@ -2,7 +2,7 @@
 
 # Database Key-Value Implementation and HTTP Server
 
-This repository contains a simple implementation of a key-value database and an HTTP server built from scratch using UNIX sockets. The project includes libraries in Python and Golang for interacting with the HTTP server.
+This repository contains a simple implementation of a key-value database and a HTTP server built from scratch using UNIX sockets. The project includes libraries in Python and Golang for interacting with the HTTP server.
 
 ## Table of Contents
 
