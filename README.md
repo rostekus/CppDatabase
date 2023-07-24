@@ -4,6 +4,45 @@
 
 This repository contains a simple implementation of a key-value database and an HTTP server built from scratch using UNIX sockets. The project includes libraries in Python and Golang for interacting with the HTTP server.
 
+## Table of Contents
+
+## Table of Contents
+
+- [Introduction](#introduction)
+   - [Functionality](#functionality)
+- [Building the Repository](#building-the-repository)
+  - [Prerequisites](#prerequisites)
+  - [Build Steps](#build-steps)
+- [HTTP Server (C++)](#http-server-c)
+   - [Further Development](#further-development)
+- [Python Library (python_db_lib)](#python-library-python_db_lib)
+- [Golang Library (go_db_lib)](#golang-library-go_db_lib)
+- [Presentation Layer](#presentation-layer)
+
+## Introduction
+
+### Functionality
+
+#### 1. Set Key-Value Pair
+To store a key-value pair in the database, you can send an HTTP POST request. The server will store the provided key-value pair in the database.
+
+#### 2. Get Value by Key:
+To retrieve the value associated with a specific key, you can send an HTTP GET. The server will fetch the value from the database and return it in the response.
+
+#### 3. Get All Key-Value Pairs:
+To retrieve all key-value pairs stored in the database, you can send an HTTP GET request to the server without any parameters. The server will fetch all key-value pairs from the database and return them in the response.
+
+#### Example:
+Request
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{"key":"example_key","value":"example_value"}' http://localhost:8080/keyvalue
+```
+Response Body:
+```bash
+{
+"key": "SET"
+}
+```
 
 ## Building the Repository
 
@@ -53,6 +92,20 @@ The HTTP server is designed from scratch and located in the `src/Network` direct
 - `Router.cpp` and `Router.hpp`: Handling routing logic for different HTTP requests.
 - `Handlers.cpp` and `Handlers.hpp`: Implementing various request handlers.
 
+### Further Development
+If you want add your own handler all you need to do is implement IHandler interface:
+```cpp
+class IHandler {
+ public:
+  virtual Response handle(Request req) = 0;
+};
+```
+And then register it in router:
+```cpp
+router->registerRoute("/path", httpserver::Method::GET,
+                        std::move(yourHandler));
+```
+
 ## Python Library (python_db_lib)
 
 The `python_db_lib` directory contains a Python library to interact with the HTTP server. Key files in this directory are:
@@ -68,7 +121,7 @@ The `go_db_lib` directory contains a Golang library for communication with the H
 
 ## Presentation Layer
 
-The `presentation` directory contains the presentation layer for the application, including backend and frontend components.
+The `presentation` directory contains the presentation layer for the application.
 
 ### Backend
 
@@ -80,10 +133,6 @@ The backend is implemented in Python using FastAPI and includes the following co
 - `presentation/backend/app/services/db_service.py`: Implements services for handling database operations.
 - `presentation/backend/main.py`: Entry point for the backend application.
 
-## Scripts
-
-The `scripts` directory includes helper scripts for the project. For example, `format-all.sh` can be used for code formatting.
-
 ## Contribution
 
 Contributions to this repository are welcome. If you find any issues or have improvements to suggest, feel free to open a pull request.
@@ -91,4 +140,3 @@ Contributions to this repository are welcome. If you find any issues or have imp
 ---
 
 Please note that this README provides an overview of the repository structure and its contents. For detailed instructions on building, running, and using the components, refer to the individual directories and files within the repository.
-
